@@ -1,29 +1,38 @@
 import { config } from "dotenv";
+import cron from 'node-cron';
 import TelegramBot from 'node-telegram-bot-api';
 import chatResponseConsts from "./consts/chat-response.consts";
 import doAPIRequest from "./utils/doAPIRequest";
 import getImagePath from "./utils/getImagePath";
+import logger from "./utils/logger";
 import sendMessageToAdmins from "./utils/sendMessageToAdmins";
 
 config();
 
-const token = process.env.BOT_TOKEN! as string;
+const token = process.env.BOT_TOKEN as string;
+const cronInterval = process.env.CRON_INTERVAL as string;
+const chatId = +process.env.CHAT_ID!;
 
 const startCmdRegExp: RegExp = /\/start/g;
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
 
+cron.schedule(cronInterval, async () => {
+  logger.info('Cron emitted!');
+  const apiResponse = await doAPIRequest('tips');
 
-bot.onText(startCmdRegExp, (msg) => {
+  if (!apiResponse || apiResponse.isError) return bot.sendMessage(chatId, '!!! Internal error (cron)');
+
+  return bot.sendMessage(chatId, apiResponse.tip);
+});
+
+bot.onText(startCmdRegExp, () => {
   // when user entered the bot for 1st time...
-  const chatId = msg.chat.id;
-
   return bot.sendMessage(chatId, chatResponseConsts.welcome);
 });
 
 bot.on('message', async (msg) => {
-  const chatId = msg.chat.id;
   const item = msg.text!;
 
   if (item.match(startCmdRegExp)) return; // break here, above function will work here!
@@ -37,7 +46,7 @@ bot.on('message', async (msg) => {
   const itemFound: boolean = apiResponse.itemFound;
 
   if (!itemFound){
-    sendMessageToAdmins(item);
+    await sendMessageToAdmins(item);
     return bot.sendMessage(chatId, chatResponseConsts.unknownItem);
   } else {
     const categoryNeeded = apiResponse.categoryNeeded;

@@ -7,13 +7,13 @@ config();
 const doAPIRequest = async (target: string, item?: string | null) => {
 
     try {
-        const apiBaseURL = process.env.API_BASE_URL! as string;
-        const apiKey = process.env.API_KEY! as string;
+        const apiBaseURL = process.env.API_BASE_URL as string;
+        const apiKey = process.env.API_KEY as string;
 
         // for item cmd there is a payload, for tips - no
         let query = item ? `?${new URLSearchParams({ item })}` : '';
 
-        logger.info(`query: ${query}`);
+        item ? logger.info(`query: ${query}`) : logger.info(`query: tip`);
         
         const url = `${apiBaseURL}/${target}/find${query}`;
 
