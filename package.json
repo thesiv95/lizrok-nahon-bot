@@ -1,6 +1,6 @@
 {
   "name": "lizrok-nahon-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Telegram bot that shows recycling information in Israel",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,8 @@
     "@types/node-telegram-bot-api": "^0.57.1",
     "@types/nodemailer": "^6.4.4",
     "cz-conventional-changelog": "^3.3.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "standard-version": "^9.5.0"
   },
   "config": {
     "commitizen": {
