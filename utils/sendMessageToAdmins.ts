@@ -18,7 +18,7 @@ const sendMessageToAdmins = async (newItem: string): Promise<void> => {
   try {
     const twilioRequests = adminsPhonesList.map((adminPhone) => {
       return twilio.messages.create({
-        body: `Unknown item from bot: ${newItem}`,
+        body: `פריט לא ידוע מהבוט - ${newItem}`,
         from: virtualPhoneNumber,
         to: adminPhone,
       })
