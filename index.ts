@@ -6,6 +6,7 @@ import doAPIRequest from "./utils/doAPIRequest";
 import getImagePath from "./utils/getImagePath";
 import logger from "./utils/logger";
 import sendMessageToAdmins from "./utils/sendMessageToAdmins";
+import serializeText from "./utils/serializeText";
 
 config();
 
@@ -18,13 +19,31 @@ const startCmdRegExp: RegExp = /\/start/g;
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
 
+// Tips cron initialization
 cron.schedule(cronInterval, async () => {
-  logger.info('Cron emitted!');
-  const apiResponse = await doAPIRequest('tips');
+  try {
+    logger.info('Cron emitted!');
+    const apiResponse = await doAPIRequest('tips');
 
-  if (!apiResponse || apiResponse.isError) return bot.sendMessage(chatId, '!!! Internal error (cron)');
+    // *bold header*
+    const tipText = `
+      *${apiResponse.title}*
+      ${serializeText(apiResponse.text)}
+    `;
 
-  return bot.sendMessage(chatId, apiResponse.tip);
+    const tipImages = apiResponse.imageUrls.map((image: string) => {
+      return {
+        type: 'photo',
+        media: image
+      }
+    })
+
+    bot.sendMessage(chatId, tipText, { parse_mode: 'MarkdownV2' });
+    bot.sendMediaGroup(chatId, tipImages);
+  } catch (error) {
+    logger.error(error);
+  }
+
 });
 
 bot.onText(startCmdRegExp, () => {
