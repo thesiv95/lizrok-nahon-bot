@@ -1,0 +1,44 @@
+{
+  "name": "lizrok-nahon-bot",
+  "version": "1.0.1",
+  "description": "Telegram bot that shows recycling information in Israel",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "build": "tsc -p .",
+    "dev": "cross-env NODE_ENV=dev nodemon index.ts",
+    "commit": "git cz",
+    "changelog": "standard-version"
+  },
+  "keywords": [
+    "node",
+    "telegram",
+    "eco",
+    "bot"
+  ],
+  "author": "Ilya Soloveychik <dj.active.17@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "node-cron": "^3.0.0",
+    "node-telegram-bot-api": "^0.57.0",
+    "twilio": "^3.77.0",
+    "typescript": "^4.6.4",
+    "winston": "^3.7.2"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.1",
+    "@types/node-telegram-bot-api": "^0.57.1",
+    "@types/nodemailer": "^6.4.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "nodemon": "^2.0.16",
+    "standard-version": "^9.5.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
