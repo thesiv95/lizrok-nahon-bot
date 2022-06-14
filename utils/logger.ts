@@ -1,17 +1,28 @@
+import path from 'path';
 import { createLogger, format, transports } from 'winston';
-const { combine, splat, printf } = format;
+const { combine, splat, timestamp, printf } = format;
 
-const myFormat = printf( ({ level, message }) => `[${level}] : ${message}`);
-
-const logger = createLogger({
-  level: 'debug',
-  format: combine(
-	format.colorize(),
-	splat(),
-	myFormat
-  ),
-  transports: [
-	new transports.Console({ level: 'debug' }),
-  ]
+const logFormat = printf(({ level, message, timestamp }) => {
+    // remove T,Z,.ms from timestamp
+    return `${timestamp.replace('T', ' ').slice(0, -5)} [${level}] ${message}`;
 });
+
+/**
+ * Logger instance
+ */
+const logger = createLogger({
+    level: 'debug',
+    format: combine(
+        splat(),
+        timestamp(),
+        logFormat
+    ),
+    transports: [
+        new transports.Console(),
+        new transports.File({
+            filename: path.resolve(__dirname, '..', 'logs', 'app.log')
+        }),
+    ],
+});
+
 export default logger;
