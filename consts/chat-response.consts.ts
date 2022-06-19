@@ -1,5 +1,6 @@
 const chatResponseConsts = {
     welcome: 'ברוך הבא',
+    howto: 'הזן את הפריט שברצונך לשחרר',
     orange: `
         🟠 זורקים את זה לפח הכתום! 
         ‼️חשוב מאוד‼️

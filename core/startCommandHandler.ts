@@ -10,8 +10,11 @@ const startCommandHandler = async (msg: TelegramBot.Message, botInstance: Telegr
     const thisChatId = msg.chat.id; // one user has its unique chat id...
 
     // when user entered the bot for 1st time, it will be stored at db (this is needed for cron)
-    await checkUserInDB(thisNickName, thisChatId);
-    return botInstance.sendMessage(thisChatId, chatResponseConsts.welcome);
+    return Promise.all([
+      checkUserInDB(thisNickName, thisChatId),
+      botInstance.sendMessage(thisChatId, chatResponseConsts.welcome),
+      botInstance.sendMessage(thisChatId, chatResponseConsts.howto),
+    ]);
   } catch (error) {
     logger.error('startCommandHandler', error);
   }
