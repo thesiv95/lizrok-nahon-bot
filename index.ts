@@ -1,7 +1,8 @@
 import { config } from "dotenv";
 import cron from 'node-cron';
-import TelegramBot from 'node-telegram-bot-api';
+import TelegramBot, { KeyboardButton, SendMessageOptions } from 'node-telegram-bot-api';
 import chatResponseConsts from "./consts/chat-response.consts";
+import startCommandHandler from "./core/startCommandHandler";
 import doAPIRequest from "./utils/doAPIRequest";
 import getImagePath from "./utils/getImagePath";
 import logger from "./utils/logger";
@@ -46,12 +47,13 @@ cron.schedule(cronInterval, async () => {
 
 });
 
-bot.onText(startCmdRegExp, () => {
+bot.onText(startCmdRegExp, (msg) => {
   // when user entered the bot for 1st time...
-  return bot.sendMessage(chatId, chatResponseConsts.welcome);
+  return startCommandHandler(msg, bot);
 });
 
 bot.on('message', async (msg) => {
+  const chatId = msg.chat.id;
   const userId = msg.chat.username || 'no nick';
   const item = msg.text!;
 
