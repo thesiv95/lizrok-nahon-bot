@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import cron from 'node-cron';
-import TelegramBot, { KeyboardButton, SendMessageOptions } from 'node-telegram-bot-api';
+import TelegramBot from 'node-telegram-bot-api';
 import chatResponseConsts from "./consts/chat-response.consts";
 import startCommandHandler from "./core/startCommandHandler";
 import doAPIRequest from "./utils/doAPIRequest";
@@ -8,6 +8,8 @@ import getImagePath from "./utils/getImagePath";
 import logger from "./utils/logger";
 import sendMessageToAdmins from "./utils/sendMessageToAdmins";
 import serializeText from "./utils/serializeText";
+import getKeyboard from './keys/keyboard';
+import keysHandler from "./core/keysHandler";
 
 config();
 
@@ -52,12 +54,29 @@ bot.onText(startCmdRegExp, (msg) => {
   return startCommandHandler(msg, bot);
 });
 
+// Keys: markup
+bot.onText(/\/key/, (msg) => {
+  bot.sendMessage(msg.chat.id, "Text keyboard", {
+    "reply_markup": {
+      inline_keyboard: getKeyboard,
+    }
+  });
+});
+
+// Keys: handlers
+bot.on('callback_query', (callbackQuery) => {
+  return keysHandler(callbackQuery, bot);
+});
+
+
+
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.chat.username || 'no nick';
   const item = msg.text!;
 
   if (item.match(startCmdRegExp)) return; // break here, above function will work here!
+  if (item.match(/\/key/)) return;
 
   if (!item) bot.sendMessage(chatId, 'No msg found');
 
