@@ -5,7 +5,7 @@ import logger from "../utils/logger";
 
 const startCommandHandler = async (msg: TelegramBot.Message, botInstance: TelegramBot) => {
   try {
-    logger.info('Cron emitted!');
+
     const thisNickName = msg.chat.username!;
     const thisChatId = msg.chat.id; // one user has its unique chat id...
 

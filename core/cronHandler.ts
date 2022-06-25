@@ -5,6 +5,7 @@ import serializeText from "../utils/serializeText";
 
 const cronHandler = async (botInstance: TelegramBot) => {
     try {
+      logger.info('Cron emitted!');
       const activeUsers = await checkActiveUsers();
       const userChatIds: string[] = activeUsers.map((el: { userChatId: any; }) => el.userChatId);
       
