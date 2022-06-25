@@ -52,6 +52,7 @@ bot.onText(startCmdRegExp, () => {
 });
 
 bot.on('message', async (msg) => {
+  const userId = msg.chat.username || 'no nick';
   const item = msg.text!;
 
   if (item.match(startCmdRegExp)) return; // break here, above function will work here!
@@ -65,7 +66,7 @@ bot.on('message', async (msg) => {
   const itemFound: boolean = apiResponse.itemFound;
 
   if (!itemFound){
-    await sendMessageToAdmins(item);
+    await sendMessageToAdmins(item, userId);
     return bot.sendMessage(chatId, chatResponseConsts.unknownItem);
   } else {
     const categoryNeeded = apiResponse.categoryNeeded;

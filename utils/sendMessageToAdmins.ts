@@ -14,11 +14,11 @@ const adminsPhonesList = adminsPhones.split(',');
 
 const twilio = twilioApi(sid, token, { logLevel: 'debug' });
 
-const sendMessageToAdmins = async (newItem: string): Promise<void> => {
+const sendMessageToAdmins = async (newItem: string, userId: string): Promise<void> => {
   try {
     const twilioRequests = adminsPhonesList.map((adminPhone) => {
       return twilio.messages.create({
-        body: `פריט לא ידוע מהבוט - ${newItem}`,
+        body: `פריט לא ידוע מהבוט - ${newItem} || ${userId}`,
         from: virtualPhoneNumber,
         to: adminPhone,
       })
