@@ -3,11 +3,9 @@ import chatResponseConsts from "../consts/chat-response.consts";
 import { doAPIRequest } from "../utils/api";
 import getImagePath from "../utils/getImagePath";
 import logger from "../utils/logger";
-import sendMessageToAdmins from "../utils/sendMessageToAdmins";
 
 const messageHandler = async (startCmdRegExp: RegExp, msg: TelegramBot.Message, botInstance: TelegramBot) => {
     try {
-        const userId = msg.chat.username || 'no nick';
         const thisChatId = msg.chat.id; // one user has its unique chat id...
         const item = msg.text!;
     
@@ -22,7 +20,6 @@ const messageHandler = async (startCmdRegExp: RegExp, msg: TelegramBot.Message, 
         const itemFound: boolean = apiResponse.itemFound;
     
         if (!itemFound){
-        await sendMessageToAdmins(item, userId);
         return botInstance.sendMessage(thisChatId, chatResponseConsts.unknownItem);
         } else {
         const categoryNeeded = apiResponse.categoryNeeded;
