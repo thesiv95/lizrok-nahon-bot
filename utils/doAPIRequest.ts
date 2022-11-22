@@ -24,8 +24,6 @@ const doAPIRequest = async (target: string, item?: string | null) => {
             }
         });
 
-        console.log('api', apiResponse);
-
         const apiResponseJSON = await apiResponse.data;
         
         
