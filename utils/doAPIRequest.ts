@@ -3,6 +3,7 @@ import axios from 'axios';
 import logger from './logger';
 
 config();
+const API_ERR_CODE = 500;
 
 const doAPIRequest = async (target: string, item?: string | null) => {
 
@@ -22,11 +23,20 @@ const doAPIRequest = async (target: string, item?: string | null) => {
                 'x-api-key': apiKey
             }
         });
+
+        console.log('api', apiResponse);
+
         const apiResponseJSON = await apiResponse.data;
+        
+        
+
         return apiResponseJSON.data;
 
     } catch (error) {
+        const errorCasted = error as Error;
         console.error(`error from api: ${error}`);
+        // Error handle
+        return errorCasted.message;
     }
 
     
