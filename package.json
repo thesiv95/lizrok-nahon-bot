@@ -1,6 +1,6 @@
 {
   "name": "lizrok-nahon-bot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Telegram bot that shows recycling information in Israel",
   "main": "index.js",
   "scripts": {
